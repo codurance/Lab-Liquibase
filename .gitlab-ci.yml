@@ -12,5 +12,6 @@ services:
 
 validate_changelog:
   stage: validate
+  image: liquibase/liquibase:4.2.2
   script: 
     - /liquibase/liquibase  --defaultsFile=./src/liquibase.properties --changeLogFile=./src/changelog.xml validate
