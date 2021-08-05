@@ -1,5 +1,6 @@
 stages:
-  - validate
+  - validate_syntax
+  - validate_migration
 
 variables:
   POSTGRES_USER: "lab_user"
@@ -10,8 +11,29 @@ services:
   - name: postgres:12.7
     alias: postgres
 
-validate_changelog:
-  stage: validate
+validate_syntax:
+  stage: validate_syntax
   image: liquibase/liquibase:4.2.2
   script: 
-    - /liquibase/liquibase  --defaultsFile=./src/liquibase.properties --changeLogFile=./src/changelog.xml validate
+    - |
+      /liquibase/liquibase \
+      --defaultsFile=./src/liquibase.properties \
+      --changeLogFile=./src/changelog.xml \
+      validate
+
+validate_migration:
+  stage: validate_migration
+  image: liquibase/liquibase:4.2.2
+  script: 
+    - |
+      /liquibase/liquibase \
+      --defaultsFile=./src/liquibase.properties \
+      --changeLogFile=./src/changelog.xml \
+      --contexts="test" \
+      update
+    - |
+      /liquibase/liquibase \
+      --defaultsFile=./src/liquibase.properties \
+      --outputFile=masterSnapshot.json \
+      snapshot \
+    - cat masterSnapshot.json
