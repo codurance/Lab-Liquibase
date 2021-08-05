@@ -14,7 +14,8 @@ services:
 validate_syntax:
   stage: validate_syntax
   image: liquibase/liquibase:4.2.2
-  script: 
+  script:
+    - git --version 
     - |
       /liquibase/liquibase \
       --defaultsFile=./src/liquibase.properties \
@@ -37,3 +38,5 @@ validate_migration:
       --outputFile=masterSnapshot.json \
       snapshot
     - cat masterSnapshot.json
+  only:
+    - merge_request
