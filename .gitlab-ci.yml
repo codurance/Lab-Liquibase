@@ -35,5 +35,5 @@ validate_migration:
       /liquibase/liquibase \
       --defaultsFile=./src/liquibase.properties \
       --outputFile=masterSnapshot.json \
-      snapshot \
+      snapshot
     - cat masterSnapshot.json
