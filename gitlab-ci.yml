@@ -1,0 +1,16 @@
+stages:
+  - validate
+
+variables:
+  POSTGRES_USER: "lab_user"
+  POSTGRES_PASSWORD: "lab_password"
+  POSTGRES_DB: "lab_db"
+
+services:
+  - name: postgres:12.7
+    alias: postgres
+
+validate_changelog:
+  stage: validate
+  script: 
+    - /liquibase/liquibase  --defaultsFile=./src/liquibase.properties --changeLogFile=./src/changelog.xml validate

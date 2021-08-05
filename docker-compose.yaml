@@ -1,0 +1,38 @@
+version: '3'
+
+networks:
+  liquibase:
+
+services:
+  postgres:
+    image: postgres:12.7
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: lab_user
+      POSTGRES_PASSWORD: lab_password
+      POSTGRES_DB: lab_db
+    networks:
+      - liquibase
+    restart: unless-stopped
+  
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    networks: 
+      - liquibase
+  
+  liquibase:
+      image: liquibase/liquibase:4.4.2
+      container_name: liquibase
+      volumes:
+        - ./src:/liquibase/changelog/
+      networks: 
+        - liquibase
