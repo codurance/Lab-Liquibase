@@ -43,4 +43,16 @@
         </rollback>
     </changeSet>
 
+    <changeSet author="liquibase" id="4">
+        <renameColumn columnDataType="VARCHAR(255)"
+            newColumnName="Email"
+            oldColumnName="User-Email"
+            tableName="Users"
+        />
+    </changeSet>
+
+    <changeSet author="liquibase" id="5">
+        <tagDatabase tag="update_UserEmail_to_Email"/>
+    </changeSet>
+
 </databaseChangeLog> 

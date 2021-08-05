@@ -61,3 +61,14 @@ If changes are made to the changesets that were already applied to DB, Liquibase
 docker-compose run --rm liquibase --defaultsFile=/liquibase/changelog/liquibase.properties clearCheckSums
 ```
 DO NOT USE IN PRODUCTION DB
+
+## Generating snapshots as files in local environment
+To generate the snapshot file on local drive path for the file must point to mounted volume
+```bash
+docker-compose run --rm liquibase --defaultsFile=/liquibase/changelog/liquibase.properties snapshot --outputFile=changelog/masterSnapshot.json
+```
+
+## Performing diff from two snapshots
+```bash
+/liquibase/liquibase --referenceUrl="offline:postgresql?snapshot=<path-to-snapshot>" --url="offline:postgresql?snapshot=<path-to-snapshot>" diff
+```

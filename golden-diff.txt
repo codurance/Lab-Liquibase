@@ -1,5 +1,5 @@
-Reference Database: null @ offline:postgresql?snapshot=changelog/masterSnapshot.json (Default Schema: public)
-Comparison Database: lab_user @ offline:postgresql?snapshot=changelog/rollbackSnapshot.json (Default Schema: public)
+Reference Database: null @ offline:postgresql?snapshot=masterSnapshot.json (Default Schema: public)
+Comparison Database: lab_user @ offline:postgresql?snapshot=rollbackSnapshot.json (Default Schema: public)
 Compared Schemas: public
 Product Name: EQUAL
 Product Version: EQUAL
