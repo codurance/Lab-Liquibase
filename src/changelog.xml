@@ -6,25 +6,41 @@
   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd
       http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.2.xsd">
 
-<changeSet author="liquibase" id="1">
-    <createTable tableName="Users">
-        <column autoIncrement="true" name="id" type="INTEGER">
-            <constraints nullable="false" primaryKey="true" primaryKeyName="user_pkey"/>
-        </column>
-        <column name="Name" type="VARCHAR(255)">
-            <constraints nullable="false"/>
-        </column>    
-        <column name="User-Email" type="VARCHAR(255)">
-            <constraints nullable="false"/>
-        </column>
-        <column name="Status" type="VARCHAR(100)">
-            <constraints nullable="false"/>
-        </column>
-    </createTable>
-</changeSet>
+    <changeSet author="liquibase" id="1">
+        <createTable tableName="Users">
+            <column autoIncrement="true" name="id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="user_pkey"/>
+            </column>
+            <column name="Name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>    
+            <column name="User-Email" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Status" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
 
-<changeSet author="liquibase" id="2">
-    <tagDatabase tag="create_users_table"/>
-</changeSet>
+    <changeSet author="liquibase" id="2">
+        <tagDatabase tag="create_users_table"/>
+    </changeSet>
+
+    <changeSet author="liquibase" id="3" context="test">
+        <preConditions>
+            <tableExists tableName="Users"/>
+        </preConditions>
+        <loadData encoding="UTF-8"
+            file="/data/users.csv"
+            relativeToChangelogFile="true"
+            separator=","
+            tableName="Users"
+        />
+        <rollback>
+            <delete tableName="Users">
+            </delete>
+        </rollback>
+    </changeSet>
 
 </databaseChangeLog> 
