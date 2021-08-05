@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<databaseChangeLog  
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"  
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"  
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd
+      http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.2.xsd">
+
+<changeSet author="liquibase" id="7">
+    <renameTable schemaName="public"
+        newTableName="Customers"
+        oldTableName="Users"/>
+    <createView schemaName="public"
+        encoding="UTF-8"
+        viewName="Users">
+        SELECT * FROM public."Customers"
+    </createView>
+</changeSet>
+
+<changeSet author="liquibase" id="8">
+    <tagDatabase tag="rename_table_Users_to_Customers_begain"/>
+</changeSet>
+
+<changeSet author="liquibase" id="9">
+    <dropView schemaName="public"
+        viewName="Users"/>
+
+    <rollback>
+        <createView schemaName="public"
+            encoding="UTF-8"
+            viewName="Users">
+            select * from public."Customers"
+        </createView>
+    </rollback>
+</changeSet>
+
+<changeSet id="10" author="liquibase">
+  <preConditions onFail="HALT" onError="HALT">
+    <not>
+        <viewExists viewName="Users"/>
+    </not>
+  </preConditions>
+</changeSet>
+
+<changeSet author="liquibase" id="11">
+    <tagDatabase tag="rename_table_Users_to_Customers_transition_end"/>
+</changeSet>
+
+</databaseChangeLog>
