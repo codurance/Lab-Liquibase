@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<databaseChangeLog  
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"  
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"  
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd
+      http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.2.xsd">
+
+<changeSet author="liquibase" id="12">
+    <addColumn schemaName="public"
+        tableName="Customers">
+        <column name="First_Name"
+            afterColumn="Name"
+            type="VARCHAR(120)">
+        </column>
+        <column name="Last_Name"
+            afterColumn="First_Name"
+            type="VARCHAR(120)">
+        </column>
+    </addColumn>
+    <sqlFile path="../sql/SplitNameToFirstAndLast/split-name.sql" relativeToChangelogFile="true"/>
+    <sqlFile path="../sql/SplitNameToFirstAndLast/name-trigger.sql" relativeToChangelogFile="true" splitStatements="false"/>
+    <rollback>
+        <sqlFile path="../sql/SplitNameToFirstAndLast/join-name.sql" relativeToChangelogFile="true"/>
+        <dropColumn schemaName="public"
+            tableName="Customers">
+            <column name="First_Name"/>
+            <column name="Last_Name"/>
+        </dropColumn>
+    </rollback>
+</changeSet>
+
+<changeSet author="liquibase" id="13">
+    <tagDatabase tag="split_customers_name_to_first_and_last_name_begin"/>
+</changeSet>
+
+<changeSet author="liquibase" id="14">
+    <dropColumn schemaName="public"
+        tableName="Customers">
+        <column name="Name"/>
+    </dropColumn>
+    <sqlFile path="../sql/SplitNameToFirstAndLast/drop-trigger.sql" relativeToChangelogFile="true" splitStatements="false"/>
+    <rollback>
+        <addColumn schemaName="public"
+            tableName="Customers">
+            <column name="Name"
+                position="2"
+                type="VARCHAR(255)">
+            </column>
+        </addColumn>
+        <sqlFile path="../sql/SplitNameToFirstAndLast/name-trigger.sql" relativeToChangelogFile="true" splitStatements="false"/>
+        <sqlFile path="../sql/SplitNameToFirstAndLast/join-name.sql" relativeToChangelogFile="true"/>
+    </rollback>
+</changeSet>
+
+<changeSet author="liquibase" id="15">
+    <tagDatabase tag="split_customers_name_to_first_and_last_name_end"/>
+</changeSet>
+
+</databaseChangeLog>

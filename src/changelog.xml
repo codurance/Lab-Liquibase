@@ -65,6 +65,9 @@
 
     <include 
         file="/partials/rename_table_Users_to_Customers.xml"
+        relativeToChangelogFile="true"/>    
+    <include 
+        file="/partials/split_column_Name_to_First_Last_Name.xml"
         relativeToChangelogFile="true"/>
 
 </databaseChangeLog> 
