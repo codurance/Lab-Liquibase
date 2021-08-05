@@ -15,7 +15,6 @@ validate_syntax:
   stage: validate_syntax
   image: liquibase/liquibase:4.2.2
   script:
-    - git --version 
     - |
       /liquibase/liquibase \
       --defaultsFile=./src/liquibase.properties \
