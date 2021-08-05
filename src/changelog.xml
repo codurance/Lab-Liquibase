@@ -51,7 +51,15 @@
         />
     </changeSet>
 
-    <changeSet author="liquibase" id="5">
+    <changeSet id="5" author="liquibase" context="test">
+      <preConditions onFail="HALT" onError="HALT">
+        <sqlCheck expectedResult="0">
+        SELECT COUNT(1) FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME='User-Email'
+        </sqlCheck>
+      </preConditions>
+    </changeSet>
+
+    <changeSet author="liquibase" id="6">
         <tagDatabase tag="update_UserEmail_to_Email"/>
     </changeSet>
 
