@@ -1,11 +1,13 @@
 stages:
   - validate_syntax
   - validate_migration
+  - validate_diff
 
 variables:
   POSTGRES_USER: "lab_user"
   POSTGRES_PASSWORD: "lab_password"
   POSTGRES_DB: "lab_db"
+  BASE_MIGRATION: "create_users_table"
 
 services:
   - name: postgres:12.7
@@ -30,12 +32,53 @@ validate_migration:
       --defaultsFile=./src/liquibase.properties \
       --changeLogFile=./src/changelog.xml \
       --contexts="test" \
-      update
+      updateToTag $BASE_MIGRATION
     - |
       /liquibase/liquibase \
       --defaultsFile=./src/liquibase.properties \
       --outputFile=masterSnapshot.json \
-      snapshot
-    - cat masterSnapshot.json
+      snapshot \
+      --snapshotFormat=json
+    - |
+      /liquibase/liquibase \
+      --defaultsFile=./src/liquibase.properties \
+      --changeLogFile=./src/changelog.xml \
+      --logLevel=info \
+      --contexts="test" \
+      updateTestingRollback
+    - |
+      /liquibase/liquibase \
+      --defaultsFile=./src/liquibase.properties \
+      --changeLogFile=./src/changelog.xml \
+      --contexts="test" \
+      rollback $BASE_MIGRATION
+    - |
+      /liquibase/liquibase \
+      --defaultsFile=./src/liquibase.properties \
+      --outputFile=rollbackSnapshot.json \
+      snapshot \
+      --snapshotFormat=json
+    - |
+      /liquibase/liquibase \
+      --defaultsFile=./src/liquibase.properties \
+      --outputFile=diff.txt \
+      --referenceUrl="offline:postgresql?snapshot=masterSnapshot.json" \
+      --url="offline:postgresql?snapshot=rollbackSnapshot.json" \
+      --logLevel=info \
+      diff
+  artifacts:
+    paths:
+      - masterSnapshot.json
+      - rollbackSnapshot.json
+      - diff.txt
+  only:
+    - merge_request
+
+validate_diff:
+  stage: validate_diff
+  dependencies:
+    - validate_migration
+  script:
+    - ( cmp --silent golden-diff.txt diff.txt && echo "\n\n No drift of DB present \n\n" ) || ( echo "\n\n Drift of schema detected:" && diff --normal golden-diff.txt diff.txt )
   only:
     - merge_request
