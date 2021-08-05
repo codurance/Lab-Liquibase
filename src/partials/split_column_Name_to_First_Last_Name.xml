@@ -22,6 +22,7 @@
     <sqlFile path="../sql/SplitNameToFirstAndLast/name-trigger.sql" relativeToChangelogFile="true" splitStatements="false"/>
     <rollback>
         <sqlFile path="../sql/SplitNameToFirstAndLast/join-name.sql" relativeToChangelogFile="true"/>
+        <sqlFile path="../sql/SplitNameToFirstAndLast/drop-trigger.sql" relativeToChangelogFile="true" splitStatements="false"/>
         <dropColumn schemaName="public"
             tableName="Customers">
             <column name="First_Name"/>
