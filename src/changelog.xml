@@ -63,4 +63,8 @@
         <tagDatabase tag="update_UserEmail_to_Email"/>
     </changeSet>
 
+    <include 
+        file="/partials/rename_table_Users_to_Customers.xml"
+        relativeToChangelogFile="true"/>
+
 </databaseChangeLog> 
